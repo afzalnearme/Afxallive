@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SocialMap — Connect Live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="setup-page">
+
+  <!-- SETUP SCREEN -->
+  <div id="setup-screen" class="screen active">
+    <div class="setup-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="setup-container">
+      <div class="logo">
+        <div class="logo-icon">◎</div>
+        <span>SocialMap</span>
+      </div>
+      <h1>Create your<br><em>presence</em></h1>
+      <p class="subtitle">Join the live map. See who's around the world right now.</p>
+
+      <div class="setup-form">
+        <div class="avatar-upload" id="avatarUpload">
+          <div class="avatar-preview" id="avatarPreview">
+            <span class="avatar-placeholder">+</span>
+          </div>
+          <input type="file" id="avatarInput" accept="image/*" hidden>
+          <div class="avatar-label">
+            <strong>Add photo</strong>
+            <span>optional</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Your name</label>
+          <input type="text" id="nameInput" placeholder="What should people call you?" maxlength="30">
+        </div>
+
+        <div class="form-group">
+          <label>About you</label>
+          <textarea id="bioInput" placeholder="A quick line about yourself..." maxlength="120" rows="2"></textarea>
+        </div>
+
+        <button class="btn-primary" id="joinBtn">
+          <span class="btn-text">Find my location & join →</span>
+          <span class="btn-loading" hidden>Locating...</span>
+        </button>
+        <p class="location-note">📍 We need your location to show you on the map</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP SCREEN -->
+  <div id="map-screen" class="screen">
+    <div class="topbar">
+      <div class="logo small">◎ SocialMap</div>
+      <div class="online-badge"><span class="pulse-dot"></span><span id="onlineCount">0</span> online</div>
+      <button class="btn-icon" id="myProfileBtn" title="My Profile">
+        <div id="myAvatarSmall" class="avatar-sm"></div>
+      </button>
+    </div>
+
+    <div id="map"></div>
+
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span>🌍 People Online</span>
+        <button class="close-sidebar" id="closeSidebar">×</button>
+      </div>
+      <div class="user-list" id="userList"></div>
+    </div>
+    <button class="sidebar-toggle" id="sidebarToggle">👥</button>
+  </div>
+
+  <!-- PROFILE POPUP -->
+  <div class="popup-overlay" id="profilePopup" hidden>
+    <div class="profile-card">
+      <button class="close-popup" id="closePopup">×</button>
+      <div class="profile-avatar-wrap">
+        <img id="popupAvatar" src="" alt="avatar" onerror="this.style.display='none'">
+        <div id="popupAvatarFallback" class="avatar-fallback-lg"></div>
+      </div>
+      <h2 id="popupName"></h2>
+      <p id="popupBio"></p>
+      <div class="popup-location" id="popupLocation"></div>
+      <div class="popup-actions">
+        <button class="btn-call" id="callBtn">📹 Call</button>
+        <button class="btn-dm" id="dmBtn">💬 Message</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL CHAT PANEL -->
+  <div class="chat-panel" id="globalChat">
+    <div class="chat-header">
+      <span>🌍 Global Chat</span>
+      <button class="close-chat" id="closeGlobalChat">×</button>
+    </div>
+    <div class="chat-messages" id="globalMessages"></div>
+    <div class="typing-indicator" id="globalTyping"></div>
+    <div class="chat-input-row">
+      <input type="text" id="globalMsgInput" placeholder="Message everyone..." maxlength="500" autocomplete="off">
+      <button class="send-btn" id="sendGlobal">➤</button>
+    </div>
+  </div>
+
+  <!-- DM CHAT PANEL -->
+  <div class="chat-panel dm-panel" id="dmChat">
+    <div class="chat-header">
+      <div class="chat-header-user">
+        <div class="chat-header-avatar" id="dmHeaderAvatar"></div>
+        <span id="dmHeaderName">Chat</span>
+      </div>
+      <button class="close-chat" id="closeDmChat">×</button>
+    </div>
+    <div class="chat-messages" id="dmMessages"></div>
+    <div class="typing-indicator" id="dmTyping"></div>
+    <div class="chat-input-row">
+      <input type="text" id="dmMsgInput" placeholder="Send a message..." maxlength="500" autocomplete="off">
+      <button class="send-btn" id="sendDm">➤</button>
+    </div>
+  </div>
+
+  <!-- Chat FABs -->
+  <div class="chat-fabs" id="chatFabs">
+    <button class="fab-btn" id="globalChatToggle" title="Global Chat">
+      🌍
+      <span class="fab-badge" id="globalBadge" hidden>0</span>
+    </button>
+  </div>
+
+  <!-- INCOMING CALL -->
+  <div class="call-overlay" id="incomingCall" hidden>
+    <div class="call-card incoming">
+      <div class="call-avatar" id="incomingAvatar"></div>
+      <h3 id="incomingName">Someone</h3>
+      <p>is calling you...</p>
+      <div class="call-actions">
+        <button class="btn-accept" id="acceptCall">✅ Accept</button>
+        <button class="btn-reject" id="rejectCall">❌ Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO CALL SCREEN -->
+  <div class="video-screen" id="videoScreen" hidden>
+    <video id="remoteVideo" autoplay playsinline></video>
+    <video id="localVideo" autoplay playsinline muted></video>
+    <div class="video-controls">
+      <button class="vc-btn" id="toggleMic" title="Mute">🎤</button>
+      <button class="vc-btn red" id="endCall" title="End Call">📵</button>
+      <button class="vc-btn" id="toggleCam" title="Camera off">📷</button>
+    </div>
+    <div class="call-status" id="callStatus">Connecting...</div>
+    <div class="caller-name" id="callerNameDisplay"></div>
+  </div>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
